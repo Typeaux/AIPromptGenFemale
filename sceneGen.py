@@ -67,7 +67,7 @@ def reset_defaults():
 
 # Set up the GUI
 root = tk.Tk()
-root.title("Random Prompt Generator")
+root.title("Character Generator")
 
 # Add dropdown menus with checkboxes to disable categories
 category_vars = {}
@@ -96,8 +96,8 @@ prompt_display.grid(row=len(categories)//2 + 1, columnspan=8)
 button_frame = tk.Frame(root)
 button_frame.grid(row=len(categories)//2 + 2, columnspan=8)
 
-# Add a button to generate the prompt
-generate_button = tk.Button(button_frame, text="Generate", command=generate_prompt)
+# Add a button to randomize the prompt
+generate_button = tk.Button(button_frame, text="Randomize", command=generate_prompt)
 generate_button.pack(side=tk.LEFT, padx=10)
 
 # Add a reset button
