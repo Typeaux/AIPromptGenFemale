@@ -56,6 +56,15 @@ def copy_to_clipboard():
     root.clipboard_clear()
     root.clipboard_append(prompt_text.strip())
 
+def reset_defaults():
+    for category, var in category_vars.items():
+        var.set("")  # Reset dropdowns
+    for disable_var in disable_vars.values():
+        disable_var.set(False)  # Uncheck checkboxes
+    prompt_display.config(state=tk.NORMAL)
+    prompt_display.delete('1.0', tk.END)
+    prompt_display.config(state=tk.DISABLED)
+
 # Set up the GUI
 root = tk.Tk()
 root.title("Random Prompt Generator")
@@ -83,13 +92,21 @@ prompt_display = tk.Text(root, height=10, width=80)
 prompt_display.config(state=tk.DISABLED)
 prompt_display.grid(row=len(categories)//2 + 1, columnspan=8)
 
+# Add a frame to contain the buttons
+button_frame = tk.Frame(root)
+button_frame.grid(row=len(categories)//2 + 2, columnspan=8)
+
 # Add a button to generate the prompt
-generate_button = tk.Button(root, text="Generate", command=generate_prompt)
-generate_button.grid(row=len(categories)//2 + 2, column=0, columnspan=4)
+generate_button = tk.Button(button_frame, text="Generate", command=generate_prompt)
+generate_button.pack(side=tk.LEFT, padx=10)
+
+# Add a reset button
+reset_button = tk.Button(button_frame, text="Reset", command=reset_defaults)
+reset_button.pack(side=tk.LEFT, padx=10)
 
 # Add a copy to clipboard button
-copy_button = tk.Button(root, text="Copy to Clipboard", command=copy_to_clipboard)
-copy_button.grid(row=len(categories)//2 + 2, column=4, columnspan=4)
+copy_button = tk.Button(button_frame, text="Copy to Clipboard", command=copy_to_clipboard)
+copy_button.pack(side=tk.LEFT, padx=10)
 
 # Start the GUI
 root.mainloop()
