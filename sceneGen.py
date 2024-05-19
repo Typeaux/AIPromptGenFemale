@@ -35,6 +35,16 @@ categories = {
     "Clothing Accessories": ["Glasses and Sunglasses", "Headbands and Hair Clips", "Scarves and Shawls", "Hats and Caps", "Gloves and Mittens", "Belts and Suspenders", "Jewelry and Watches", "Bags and Purses", "Socks and Stockings", "Shoes and Boots"],
 }
 
+theme_value = True
+def theme_change():
+    global theme_value
+    if theme_value == True:
+        root.config(bg="#26242f")
+        theme_value = False
+    else:
+        root.config(bg="white")
+        theme_value = True
+
 def generate_prompt():
     selected_categories = {category: (var.get(), disable_vars[category].get()) for category, var in category_vars.items()}
     prompt = []
@@ -68,6 +78,9 @@ def reset_defaults():
 # Set up the GUI
 root = tk.Tk()
 root.title("Character Generator")
+root.geometry("840x565")
+root.config(bg="white")
+
 
 # Add dropdown menus with checkboxes to disable categories
 category_vars = {}
@@ -107,6 +120,10 @@ reset_button.pack(side=tk.LEFT, padx=10)
 # Add a copy to clipboard button
 copy_button = tk.Button(button_frame, text="Copy to Clipboard", command=copy_to_clipboard)
 copy_button.pack(side=tk.LEFT, padx=10)
+
+# Add dark theme toggle to dark
+theme_button = tk.Button(button_frame, text="Change light/dark", command=theme_change)
+theme_button.pack(side=tk.LEFT, padx=10)
 
 # Start the GUI
 root.mainloop()
