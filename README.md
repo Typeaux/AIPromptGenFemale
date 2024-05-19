@@ -8,6 +8,7 @@ This Python script generates random prompts by selecting items from predefined c
 2. **Select Categories**: For each category, choose an item from the dropdown menu. You can also leave the dropdown blank to randomly select an item from that category. Additionally, you can disable a category by unchecking the "Disable/Enable" checkbox next to it. Disabled categories will be omitted from the prompt generation.
 3. **Generate Prompt**: Click the "Generate" button to create a random prompt based on your selections.
 4. **Copy Prompt**: Click the "Copy to Clipboard" button to copy the generated prompt to the clipboard.
+5. **Reset Prompt**: Click the "Reset" button to reset the values of the dropdown boxes, the checkboxes, and the prompt output window, to their default state.
 
 Dropdown menus allow you to choose specific items for each category, while the "Disable/Enable" checkboxes allow you to control whether a category is included in the prompt generation. If a category is disabled, it will be ignored when generating the prompt.
 
