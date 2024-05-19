@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import ttk
 import random
 
 # Define your categories and their items
@@ -32,14 +33,18 @@ categories = {
     "Clothing Color": ["Black Outfit", "White Outfit", "Red Outfit", "Blue Outfit", "Green Outfit", "Pink Outfit", "Purple Outfit", "Yellow Outfit", "Orange Outfit", "Gray Outfit"],
     "Clothing Details": ["Frills and Bows", "Lace and Ribbons", "Sequins and Beads", "Embroidery and Appliqué", "Ruffles and Tassels", "Prints and Patterns", "Pleats and Drapes", "Buttons and Zippers", "Belts and Buckles", "Chains and Studs"],
     "Clothing Accessories": ["Glasses and Sunglasses", "Headbands and Hair Clips", "Scarves and Shawls", "Hats and Caps", "Gloves and Mittens", "Belts and Suspenders", "Jewelry and Watches", "Bags and Purses", "Socks and Stockings", "Shoes and Boots"],
-    
 }
 
 def generate_prompt():
+    selected_categories = {category: (var.get(), disable_vars[category].get()) for category, var in category_vars.items()}
     prompt = []
-    for category, items in categories.items():
-        item = random.choice(items)
-        prompt.append(item)
+    for category, (value, disabled) in selected_categories.items():
+        if disabled:
+            continue  # Skip disabled categories
+        if value:
+            prompt.append(value)
+        else:
+            prompt.append(random.choice(categories[category]))
     prompt_text = ', '.join(prompt)
     prompt_display.config(state=tk.NORMAL)
     prompt_display.delete('1.0', tk.END)
@@ -55,18 +60,36 @@ def copy_to_clipboard():
 root = tk.Tk()
 root.title("Random Prompt Generator")
 
+# Add dropdown menus with checkboxes to disable categories
+category_vars = {}
+disable_vars = {}
+for i, (category, items) in enumerate(categories.items()):
+    col = i % 2  # Column number (0 or 1)
+    row = i // 2  # Row number
+    label = ttk.Label(root, text=category)
+    label.grid(row=row, column=col * 4, sticky="e")
+    var = tk.StringVar(root)
+    var.set("")  # Set default value to empty string
+    dropdown = ttk.Combobox(root, textvariable=var, values=[""] + items, width=30)
+    dropdown.grid(row=row, column=col * 4 + 1, sticky="w")
+    category_vars[category] = var
+    disable_var = tk.BooleanVar(root, value=False)
+    checkbox = tk.Checkbutton(root, text="Disable/Enable", variable=disable_var, onvalue=True, offvalue=False)
+    checkbox.grid(row=row, column=col * 4 + 2, sticky="w")
+    disable_vars[category] = disable_var
+
 # Add a text widget to display the prompt
 prompt_display = tk.Text(root, height=10, width=80)
 prompt_display.config(state=tk.DISABLED)
-prompt_display.pack()
+prompt_display.grid(row=len(categories)//2 + 1, columnspan=8)
 
 # Add a button to generate the prompt
 generate_button = tk.Button(root, text="Generate", command=generate_prompt)
-generate_button.pack()
+generate_button.grid(row=len(categories)//2 + 2, column=0, columnspan=4)
 
 # Add a copy to clipboard button
 copy_button = tk.Button(root, text="Copy to Clipboard", command=copy_to_clipboard)
-copy_button.pack()
+copy_button.grid(row=len(categories)//2 + 2, column=4, columnspan=4)
 
 # Start the GUI
 root.mainloop()
