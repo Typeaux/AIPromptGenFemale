@@ -81,6 +81,7 @@ root.title("Character Generator")
 root.geometry("840x565")
 root.config(bg="white")
 
+
 # Add dropdown menus with checkboxes to disable categories
 category_vars = {}
 disable_vars = {}
