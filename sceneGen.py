@@ -42,7 +42,7 @@ def theme_change():
         root.config(bg="#26242f")
         theme_value = False
     else:
-        root.config(bg="white")   
+        root.config(bg="white")
         theme_value = True
 
 def generate_prompt():
@@ -78,7 +78,7 @@ def reset_defaults():
 # Set up the GUI
 root = tk.Tk()
 root.title("Character Generator")
-root.geometry("800x600")
+root.geometry("840x565")
 root.config(bg="white")
 
 # Add dropdown menus with checkboxes to disable categories
