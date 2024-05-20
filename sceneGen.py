@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 import random
+import sv_ttk
 
 # Define your categories and their items
 categories = {
@@ -35,16 +36,6 @@ categories = {
     "Clothing Accessories": ["Glasses and Sunglasses", "Headbands and Hair Clips", "Scarves and Shawls", "Hats and Caps", "Gloves and Mittens", "Belts and Suspenders", "Jewelry and Watches", "Bags and Purses", "Socks and Stockings", "Shoes and Boots"],
 }
 
-theme_value = True
-def theme_change():
-    global theme_value
-    if theme_value == True:
-        root.config(bg="#26242f")
-        theme_value = False
-    else:
-        root.config(bg="white")
-        theme_value = True
-
 def generate_prompt():
     selected_categories = {category: (var.get(), disable_vars[category].get()) for category, var in category_vars.items()}
     prompt = []
@@ -60,6 +51,9 @@ def generate_prompt():
     prompt_display.delete('1.0', tk.END)
     prompt_display.insert(tk.END, prompt_text)
     prompt_display.config(state=tk.DISABLED)
+    prompt_display.config(state=tk.NORMAL)
+    prompt_display.delete('1.0', tk.END)
+    prompt_display.config(state=tk.DISABLED)
 
 def copy_to_clipboard():
     prompt_text = prompt_display.get('1.0', tk.END)
@@ -71,18 +65,14 @@ def reset_defaults():
         var.set("")  # Reset dropdowns
     for disable_var in disable_vars.values():
         disable_var.set(False)  # Uncheck checkboxes
-    prompt_display.config(state=tk.NORMAL)
-    prompt_display.delete('1.0', tk.END)
-    prompt_display.config(state=tk.DISABLED)
+
 
 # Set up the GUI
 root = tk.Tk()
 root.title("Character Generator")
-root.geometry("840x565")
-root.config(bg="white")
+sv_ttk.set_theme("light")
 
-
-# Add dropdown menus with checkboxes to disable categories
+# Add dropdown menus with checkboxes to disable categories 
 category_vars = {}
 disable_vars = {}
 for i, (category, items) in enumerate(categories.items()):
@@ -122,7 +112,7 @@ copy_button = tk.Button(button_frame, text="Copy to Clipboard", command=copy_to_
 copy_button.pack(side=tk.LEFT, padx=10)
 
 # Add dark theme toggle to dark
-theme_button = tk.Button(button_frame, text="Change light/dark", command=theme_change)
+theme_button = tk.Button(button_frame, text="Change light/dark", command=sv_ttk.toggle_theme)
 theme_button.pack(side=tk.LEFT, padx=10)
 
 # Start the GUI
