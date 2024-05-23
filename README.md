@@ -9,10 +9,22 @@ This Python script generates random prompts by selecting items from predefined c
 3. **Generate Prompt**: Click the "Generate" button to create a random prompt based on your selections.
 4. **Copy Prompt**: Click the "Copy to Clipboard" button to copy the generated prompt to the clipboard.
 5. **Reset Prompt**: Click the "Reset" button to reset the values of the dropdown boxes, the checkboxes, and the prompt output window, to their default state.
+6. **Fill from Prompt**: Click the "Fill from Prompt" button to populate the dropdown menus based on the current prompt output. This allows you to tweak specific options while keeping the rest of the prompt unchanged.
+7. **Save Preset**: Enter a name for your preset in the text entry box and click the "Save Preset" button to save the current configuration of dropdowns, checkboxes, and generated prompt.
+8. **Load Preset**: Select a saved preset from the list and click the "Load Preset" button to load the configuration into the dropdowns and checkboxes.
 
-Dropdown menus allow you to choose specific items for each category, while the "Disable/Enable" checkboxes allow you to control whether a category is included in the prompt generation. If a category is disabled, it will be ignored when generating the prompt.
+   
+## Features
 
-
+-    Dropdown Menus: Allow you to choose specific items for each category.
+-    Enable/Disable Checkboxes: Control whether a category is included in the prompt generation. If a category is disabled, it will be ignored when generating the prompt.
+-    Random Prompt Generation: Randomly selects items from enabled categories to create a unique prompt.
+-    Copy to Clipboard: Copies the generated prompt to the clipboard for easy use.
+-    Reset: Resets the interface to default settings.
+-    Fill from Prompt: Populates the dropdown menus based on the current prompt output for easy tweaking.
+-    Save and Load Presets: Save and load custom configurations of dropdowns, checkboxes, and prompts.
+ 
+    
 ## Categories
 
 The script contains the following categories:
