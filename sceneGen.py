@@ -43,9 +43,23 @@ def theme_change():
     global theme_value
     if theme_value:
         root.config(bg="#26242f")
+        style.configure("TCombobox", fieldbackground="#26242f", background="#26242f", foreground="white")
+        style.configure("TLabel", background="#26242f", foreground="white")
+        style.configure("TCheckbutton", background="#26242f", foreground="white")
+        style.configure("TEntry", fieldbackground="#26242f", foreground="white", insertcolor="white")
+        for widget in root.winfo_children():
+            if isinstance(widget, tk.Text):
+                widget.config(bg="#26242f", fg="white", insertbackground="white")
         theme_value = False
     else:
         root.config(bg="white")
+        style.configure("TCombobox", fieldbackground="white", background="white", foreground="black")
+        style.configure("TLabel", background="white", foreground="black")
+        style.configure("TCheckbutton", background="white", foreground="black")
+        style.configure("TEntry", fieldbackground="white", foreground="black", insertcolor="black")
+        for widget in root.winfo_children():
+            if isinstance(widget, tk.Text):
+                widget.config(bg="white", fg="black", insertbackground="black")
         theme_value = True
 
 def generate_prompt():
@@ -156,6 +170,13 @@ root.title("Character Generator")
 root.geometry("840x620")
 root.config(bg="white")
 
+# Add style for transparent Combobox
+style = ttk.Style()
+style.configure("TCombobox", fieldbackground="white", background="white")
+style.configure("TLabel", background="white", foreground="black")
+style.configure("TCheckbutton", background="white", foreground="black")
+style.configure("TEntry", fieldbackground="white", foreground="black", insertcolor="black")
+
 # Add dropdown menus with checkboxes to disable categories
 category_vars = {}
 disable_vars = {}
@@ -166,16 +187,16 @@ for i, (category, items) in enumerate(categories.items()):
     label.grid(row=row, column=col * 4, sticky="e")
     var = tk.StringVar(root)
     var.set("")  # Set default value to empty string
-    dropdown = ttk.Combobox(root, textvariable=var, values=[""] + items, width=30)
+    dropdown = ttk.Combobox(root, textvariable=var, values=[""] + items, width=30, style="TCombobox")
     dropdown.grid(row=row, column=col * 4 + 1, sticky="w")
     category_vars[category] = var
     disable_var = tk.BooleanVar(root, value=True)  # Set default value to True
-    checkbox = tk.Checkbutton(root, text="Enable/Disable", variable=disable_var, onvalue=True, offvalue=False)
+    checkbox = ttk.Checkbutton(root, text="Enable/Disable", variable=disable_var, onvalue=True, offvalue=False)
     checkbox.grid(row=row, column=col * 4 + 2, sticky="w")
     disable_vars[category] = disable_var
 
 # Add a text widget to display the prompt
-prompt_display = tk.Text(root, height=10, width=80)
+prompt_display = tk.Text(root, height=10, width=80, bg="white")
 prompt_display.config(state=tk.DISABLED)
 prompt_display.grid(row=len(categories) // 2 + 1, columnspan=8)
 
@@ -208,7 +229,7 @@ preset_frame = tk.Frame(root)
 preset_frame.grid(row=len(categories) // 2 + 3, columnspan=8, pady=10)
 
 # Entry to input preset name
-preset_entry = tk.Entry(preset_frame, width=30)
+preset_entry = ttk.Entry(preset_frame, width=30, style="TEntry")
 preset_entry.pack(side=tk.LEFT, padx=5)
 
 # Button to save preset
