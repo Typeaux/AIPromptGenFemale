@@ -43,7 +43,9 @@ def theme_change():
     global theme_value
     if theme_value:
         root.config(bg="#26242f")
-        style.configure("TCombobox", fieldbackground="#26242f", background="#26242f", foreground="white")
+        button_frame.config(bg="#26242f")
+        preset_frame.config(bg="#26242f")
+        style.configure("TCombobox", fieldbackground="#26242f", background="#26242f", foreground="black")
         style.configure("TLabel", background="#26242f", foreground="white")
         style.configure("TCheckbutton", background="#26242f", foreground="white")
         style.configure("TEntry", fieldbackground="#26242f", foreground="white", insertcolor="white")
@@ -53,6 +55,8 @@ def theme_change():
         theme_value = False
     else:
         root.config(bg="white")
+        button_frame.config(bg="white")
+        preset_frame.config(bg="white")
         style.configure("TCombobox", fieldbackground="white", background="white", foreground="black")
         style.configure("TLabel", background="white", foreground="black")
         style.configure("TCheckbutton", background="white", foreground="black")
@@ -201,7 +205,7 @@ prompt_display.config(state=tk.DISABLED)
 prompt_display.grid(row=len(categories) // 2 + 1, columnspan=8)
 
 # Add a frame to contain the buttons
-button_frame = tk.Frame(root)
+button_frame = tk.Frame(root, bg="white")
 button_frame.grid(row=len(categories) // 2 + 2, columnspan=8)
 
 # Add a button to randomize the prompt
@@ -225,7 +229,7 @@ fill_dropdowns_button = tk.Button(button_frame, text="Fill from Prompt", command
 fill_dropdowns_button.pack(side=tk.LEFT, padx=10)
 
 # Add a frame for presets
-preset_frame = tk.Frame(root)
+preset_frame = tk.Frame(root, bg="white")
 preset_frame.grid(row=len(categories) // 2 + 3, columnspan=8, pady=10)
 
 # Entry to input preset name
