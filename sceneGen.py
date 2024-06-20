@@ -44,10 +44,10 @@ def theme_change():
         button_frame.config(bg="#26242f")
         preset_frame.config(bg="#26242f")
         scene_frame.config(style="Dark.TLabelframe")
+        body_frame.config(style="Dark.TLabelframe")
         hair_frame.config(style="Dark.TLabelframe")
         face_frame.config(style="Dark.TLabelframe")
         clothing_frame.config(style="Dark.TLabelframe")
-        body_frame.config(style="Dark.TLabelframe")
         style.configure("TCombobox", fieldbackground="#26242f", background="#26242f", foreground="black")
         style.configure("TLabel", background="#26242f", foreground="white")
         style.configure("TCheckbutton", background="#26242f", foreground="white")
@@ -61,10 +61,10 @@ def theme_change():
         button_frame.config(bg="white")
         preset_frame.config(bg="white")
         scene_frame.config(style="Light.TLabelframe")
+        body_frame.config(style="Light.TLabelframe")
         hair_frame.config(style="Light.TLabelframe")
         face_frame.config(style="Light.TLabelframe")
         clothing_frame.config(style="Light.TLabelframe")
-        body_frame.config(style="Light.TLabelframe")
         style.configure("TCombobox", fieldbackground="white", background="white", foreground="black")
         style.configure("TLabel", background="white", foreground="black")
         style.configure("TCheckbutton", background="white", foreground="black")
@@ -77,13 +77,15 @@ def theme_change():
 def generate_prompt():
     selected_categories = {category: (var.get(), disable_vars[category].get()) for category, var in category_vars.items()}
     prompt = []
-    for category, (value, enabled) in selected_categories.items():
-        if not enabled:
-            continue  # Skip disabled categories
-        if value:
-            prompt.append(value)
-        else:
-            prompt.append(random.choice(categories[category]))
+    # Order of prompt generation: Scene, Body, Hair, Face, Clothing
+    for category_group in ["Occupation", "Background", "Background Color", "Camera/View Angle", "Scene lighting", "Body Type", "Bust Size", "Waist Size", "Hip Size", "Skin Tone", "Hair Length", "Hair Style", "Hair Color", "Eye Shape", "Eye Color", "Face Shape", "Lip Shape", "Lip Color", "Lip Action", "Facial Expression", "Clothing Style", "Clothing Color", "Clothing Details", "Clothing Accessories"]:
+        if category_group in selected_categories:
+            value, enabled = selected_categories[category_group]
+            if enabled:
+                if value:
+                    prompt.append(value)
+                else:
+                    prompt.append(random.choice(categories[category_group]))
     prompt_text = ', '.join(prompt)
     prompt_display.config(state=tk.NORMAL)
     prompt_display.delete('1.0', tk.END)
@@ -230,35 +232,35 @@ def create_group(frame, categories_list):
         checkbox.grid(row=i, column=2, sticky="w", padx=5, pady=5)
         disable_vars[category] = disable_var
 
+# Scene Group
+scene_frame = ttk.LabelFrame(root, text="Scene", padding=(10, 5), style="Light.TLabelframe")
+scene_frame.grid(row=0, column=0, columnspan=8, padx=10, pady=10, sticky="nsew")
+scene_categories = ["Occupation", "Background", "Background Color", "Camera/View Angle", "Scene lighting"]
+create_group(scene_frame, scene_categories)
+
 # Body Group
 body_frame = ttk.LabelFrame(root, text="Body", padding=(10, 5), style="Light.TLabelframe")
 body_frame.grid(row=1, column=0, columnspan=4, padx=10, pady=10, sticky="nsew")
-body_categories = ["Body Type", "Bust Size", "Waist Size", "Hip Size", "Skin Tone", "Character Pose"]
+body_categories = ["Body Type", "Bust Size", "Waist Size", "Hip Size", "Skin Tone"]
 create_group(body_frame, body_categories)
 
 # Hair Group
 hair_frame = ttk.LabelFrame(root, text="Hair", padding=(10, 5), style="Light.TLabelframe")
-hair_frame.grid(row=0, column=4, columnspan=4, padx=10, pady=10, sticky="nsew")
+hair_frame.grid(row=1, column=4, columnspan=4, padx=10, pady=10, sticky="nsew")
 hair_categories = ["Hair Length", "Hair Style", "Hair Color"]
 create_group(hair_frame, hair_categories)
 
 # Face Group
 face_frame = ttk.LabelFrame(root, text="Face", padding=(10, 5), style="Light.TLabelframe")
 face_frame.grid(row=2, column=0, columnspan=4, padx=10, pady=10, sticky="nsew")
-face_categories = ["Eye Shape", "Eye Color", "Face Shape", "Lip Shape", "Lip Color", "Lip Action", "Facial Expression", "Mood"]
+face_categories = ["Eye Shape", "Eye Color", "Face Shape", "Lip Shape", "Lip Color", "Lip Action", "Facial Expression"]
 create_group(face_frame, face_categories)
 
 # Clothing Group
 clothing_frame = ttk.LabelFrame(root, text="Clothing", padding=(10, 5), style="Light.TLabelframe")
-clothing_frame.grid(row=1, column=4, columnspan=4, padx=10, pady=10, sticky="nsew")
-clothing_categories = ["Clothing Style", "Clothing Color", "Clothing Details", "Clothing Accessories","Occupation", ]
+clothing_frame.grid(row=2, column=4, columnspan=4, padx=10, pady=10, sticky="nsew")
+clothing_categories = ["Clothing Style", "Clothing Color", "Clothing Details", "Clothing Accessories"]
 create_group(clothing_frame, clothing_categories)
-
-# Scene Group
-scene_frame = ttk.LabelFrame(root, text="Scene", padding=(10, 5), style="Light.TLabelframe")
-scene_frame.grid(row=0, column=0, columnspan=4, padx=10, pady=10, sticky="nsew")
-other_categories = ["Background", "Background Color", "Camera/View Angle", "Scene lighting"]
-create_group(scene_frame, other_categories)
 
 # Add a text widget to display the prompt
 prompt_display = tk.Text(root, height=10, width=80, bg="white", wrap=tk.WORD)  # Enabled word wrapping
