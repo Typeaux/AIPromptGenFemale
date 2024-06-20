@@ -35,12 +35,6 @@ categories = {
     "Clothing Accessories": ["Glasses and Sunglasses", "Headbands and Hair Clips", "Scarves and Shawls", "Hats and Caps", "Gloves and Mittens", "Belts and Suspenders", "Jewelry and Watches", "Bags and Purses", "Socks and Stockings", "Shoes and Boots"],
 }
 
-import tkinter as tk
-from tkinter import ttk, messagebox
-import random
-import json
-import os
-
 theme_value = True
 
 def theme_change():
@@ -49,6 +43,11 @@ def theme_change():
         root.config(bg="#26242f")
         button_frame.config(bg="#26242f")
         preset_frame.config(bg="#26242f")
+        scene_frame.config(style="Dark.TLabelframe")
+        hair_frame.config(style="Dark.TLabelframe")
+        face_frame.config(style="Dark.TLabelframe")
+        clothing_frame.config(style="Dark.TLabelframe")
+        body_frame.config(style="Dark.TLabelframe")
         style.configure("TCombobox", fieldbackground="#26242f", background="#26242f", foreground="black")
         style.configure("TLabel", background="#26242f", foreground="white")
         style.configure("TCheckbutton", background="#26242f", foreground="white")
@@ -61,6 +60,11 @@ def theme_change():
         root.config(bg="white")
         button_frame.config(bg="white")
         preset_frame.config(bg="white")
+        scene_frame.config(style="Light.TLabelframe")
+        hair_frame.config(style="Light.TLabelframe")
+        face_frame.config(style="Light.TLabelframe")
+        clothing_frame.config(style="Light.TLabelframe")
+        body_frame.config(style="Light.TLabelframe")
         style.configure("TCombobox", fieldbackground="white", background="white", foreground="black")
         style.configure("TLabel", background="white", foreground="black")
         style.configure("TCheckbutton", background="white", foreground="black")
@@ -205,6 +209,12 @@ style.configure("TLabel", background="white", foreground="black")
 style.configure("TCheckbutton", background="white", foreground="black")
 style.configure("TEntry", fieldbackground="white", foreground="black", insertcolor="black")
 
+# Define styles for light and dark themes
+style.configure("Light.TLabelframe", background="white", foreground="black")
+style.configure("Light.TLabelframe.Label", background="white", foreground="black")
+style.configure("Dark.TLabelframe", background="#26242f", foreground="white")
+style.configure("Dark.TLabelframe.Label", background="#26242f", foreground="white")
+
 # Grouping categories
 def create_group(frame, categories_list):
     for i, category in enumerate(categories_list):
@@ -221,31 +231,31 @@ def create_group(frame, categories_list):
         disable_vars[category] = disable_var
 
 # Body Group
-body_frame = ttk.LabelFrame(root, text="Body", padding=(10, 5))
+body_frame = ttk.LabelFrame(root, text="Body", padding=(10, 5), style="Light.TLabelframe")
 body_frame.grid(row=1, column=0, columnspan=4, padx=10, pady=10, sticky="nsew")
-body_categories = ["Body Type", "Bust Size", "Waist Size", "Hip Size", "Skin Tone", "Age", "Character Pose", "Mood"]
+body_categories = ["Body Type", "Bust Size", "Waist Size", "Hip Size", "Skin Tone", "Character Pose"]
 create_group(body_frame, body_categories)
 
 # Hair Group
-hair_frame = ttk.LabelFrame(root, text="Hair", padding=(10, 5))
+hair_frame = ttk.LabelFrame(root, text="Hair", padding=(10, 5), style="Light.TLabelframe")
 hair_frame.grid(row=0, column=4, columnspan=4, padx=10, pady=10, sticky="nsew")
 hair_categories = ["Hair Length", "Hair Style", "Hair Color"]
 create_group(hair_frame, hair_categories)
 
 # Face Group
-face_frame = ttk.LabelFrame(root, text="Face", padding=(10, 5))
+face_frame = ttk.LabelFrame(root, text="Face", padding=(10, 5), style="Light.TLabelframe")
 face_frame.grid(row=2, column=0, columnspan=4, padx=10, pady=10, sticky="nsew")
-face_categories = ["Eye Shape", "Eye Color", "Face Shape", "Lip Shape", "Lip Color", "Lip Action", "Facial Expression"]
+face_categories = ["Eye Shape", "Eye Color", "Face Shape", "Lip Shape", "Lip Color", "Lip Action", "Facial Expression", "Mood"]
 create_group(face_frame, face_categories)
 
 # Clothing Group
-clothing_frame = ttk.LabelFrame(root, text="Clothing", padding=(10, 5))
+clothing_frame = ttk.LabelFrame(root, text="Clothing", padding=(10, 5), style="Light.TLabelframe")
 clothing_frame.grid(row=1, column=4, columnspan=4, padx=10, pady=10, sticky="nsew")
-clothing_categories = ["Occupation", "Clothing Style", "Clothing Color", "Clothing Details", "Clothing Accessories"]
+clothing_categories = ["Clothing Style", "Clothing Color", "Clothing Details", "Clothing Accessories","Occupation", ]
 create_group(clothing_frame, clothing_categories)
 
 # Scene Group
-scene_frame = ttk.LabelFrame(root, text="Scene", padding=(10, 5))
+scene_frame = ttk.LabelFrame(root, text="Scene", padding=(10, 5), style="Light.TLabelframe")
 scene_frame.grid(row=0, column=0, columnspan=4, padx=10, pady=10, sticky="nsew")
 other_categories = ["Background", "Background Color", "Camera/View Angle", "Scene lighting"]
 create_group(scene_frame, other_categories)
