@@ -35,6 +35,12 @@ categories = {
     "Clothing Accessories": ["Glasses and Sunglasses", "Headbands and Hair Clips", "Scarves and Shawls", "Hats and Caps", "Gloves and Mittens", "Belts and Suspenders", "Jewelry and Watches", "Bags and Purses", "Socks and Stockings", "Shoes and Boots"],
 }
 
+import tkinter as tk
+from tkinter import ttk, messagebox
+import random
+import json
+import os
+
 theme_value = True
 
 def theme_change():
@@ -166,11 +172,31 @@ def fill_dropdowns_from_prompt():
                 category_vars[category].set(value)
                 break
 
+# Initialize category variables
+category_vars = {}
+disable_vars = {}
+
 # Set up the GUI
 root = tk.Tk()
 root.title("Character Generator")
-root.geometry("840x620")
+root.geometry("1000x700")  # Increased window size
+root.minsize(1000, 1100)  # Set minimum window size
 root.config(bg="white")
+
+# Configure the grid
+root.grid_columnconfigure(0, weight=1)
+root.grid_columnconfigure(1, weight=1)
+root.grid_columnconfigure(2, weight=1)
+root.grid_columnconfigure(3, weight=1)
+root.grid_columnconfigure(4, weight=1)
+root.grid_columnconfigure(5, weight=1)
+root.grid_columnconfigure(6, weight=1)
+root.grid_columnconfigure(7, weight=1)
+root.grid_rowconfigure(0, weight=1)
+root.grid_rowconfigure(1, weight=1)
+root.grid_rowconfigure(2, weight=1)
+root.grid_rowconfigure(3, weight=1)
+root.grid_rowconfigure(4, weight=1)
 
 # Add style for transparent Combobox
 style = ttk.Style()
@@ -179,75 +205,102 @@ style.configure("TLabel", background="white", foreground="black")
 style.configure("TCheckbutton", background="white", foreground="black")
 style.configure("TEntry", fieldbackground="white", foreground="black", insertcolor="black")
 
-# Add dropdown menus with checkboxes to disable categories
-category_vars = {}
-disable_vars = {}
-for i, (category, items) in enumerate(categories.items()):
-    col = i % 2  # Column number (0 or 1)
-    row = i // 2  # Row number
-    label = ttk.Label(root, text=category)
-    label.grid(row=row, column=col * 4, sticky="e")
-    var = tk.StringVar(root)
-    var.set("")  # Set default value to empty string
-    dropdown = ttk.Combobox(root, textvariable=var, values=[""] + items, width=30, style="TCombobox")
-    dropdown.grid(row=row, column=col * 4 + 1, sticky="w")
-    category_vars[category] = var
-    disable_var = tk.BooleanVar(root, value=True)  # Set default value to True
-    checkbox = ttk.Checkbutton(root, text="Enable/Disable", variable=disable_var, onvalue=True, offvalue=False)
-    checkbox.grid(row=row, column=col * 4 + 2, sticky="w")
-    disable_vars[category] = disable_var
+# Grouping categories
+def create_group(frame, categories_list):
+    for i, category in enumerate(categories_list):
+        label = ttk.Label(frame, text=category)
+        label.grid(row=i, column=0, sticky="e", padx=5, pady=5)
+        var = tk.StringVar(root)
+        var.set("")  # Set default value to empty string
+        dropdown = ttk.Combobox(frame, textvariable=var, values=[""] + categories[category], width=30, style="TCombobox")
+        dropdown.grid(row=i, column=1, sticky="ew", padx=5, pady=5)
+        category_vars[category] = var
+        disable_var = tk.BooleanVar(root, value=True)  # Set default value to True
+        checkbox = ttk.Checkbutton(frame, text="Enable/Disable", variable=disable_var, onvalue=True, offvalue=False)
+        checkbox.grid(row=i, column=2, sticky="w", padx=5, pady=5)
+        disable_vars[category] = disable_var
+
+# Body Group
+body_frame = ttk.LabelFrame(root, text="Body", padding=(10, 5))
+body_frame.grid(row=1, column=0, columnspan=4, padx=10, pady=10, sticky="nsew")
+body_categories = ["Body Type", "Bust Size", "Waist Size", "Hip Size", "Skin Tone", "Age", "Character Pose", "Mood"]
+create_group(body_frame, body_categories)
+
+# Hair Group
+hair_frame = ttk.LabelFrame(root, text="Hair", padding=(10, 5))
+hair_frame.grid(row=0, column=4, columnspan=4, padx=10, pady=10, sticky="nsew")
+hair_categories = ["Hair Length", "Hair Style", "Hair Color"]
+create_group(hair_frame, hair_categories)
+
+# Face Group
+face_frame = ttk.LabelFrame(root, text="Face", padding=(10, 5))
+face_frame.grid(row=2, column=0, columnspan=4, padx=10, pady=10, sticky="nsew")
+face_categories = ["Eye Shape", "Eye Color", "Face Shape", "Lip Shape", "Lip Color", "Lip Action", "Facial Expression"]
+create_group(face_frame, face_categories)
+
+# Clothing Group
+clothing_frame = ttk.LabelFrame(root, text="Clothing", padding=(10, 5))
+clothing_frame.grid(row=1, column=4, columnspan=4, padx=10, pady=10, sticky="nsew")
+clothing_categories = ["Occupation", "Clothing Style", "Clothing Color", "Clothing Details", "Clothing Accessories"]
+create_group(clothing_frame, clothing_categories)
+
+# Scene Group
+scene_frame = ttk.LabelFrame(root, text="Scene", padding=(10, 5))
+scene_frame.grid(row=0, column=0, columnspan=4, padx=10, pady=10, sticky="nsew")
+other_categories = ["Background", "Background Color", "Camera/View Angle", "Scene lighting"]
+create_group(scene_frame, other_categories)
 
 # Add a text widget to display the prompt
-prompt_display = tk.Text(root, height=10, width=80, bg="white")
+prompt_display = tk.Text(root, height=10, width=80, bg="white", wrap=tk.WORD)  # Enabled word wrapping
 prompt_display.config(state=tk.DISABLED)
-prompt_display.grid(row=len(categories) // 2 + 1, columnspan=8)
+prompt_display.grid(row=3, columnspan=8, padx=5, pady=5, sticky="nsew")  # Added padding and made expandable
 
-# Add a frame to contain the buttons
-button_frame = tk.Frame(root, bg="white")
-button_frame.grid(row=len(categories) // 2 + 2, columnspan=8)
-
-# Add a button to randomize the prompt
-generate_button = tk.Button(button_frame, text="Randomize", command=generate_prompt)
-generate_button.pack(side=tk.LEFT, padx=10)
-
-# Add a reset button
-reset_button = tk.Button(button_frame, text="Reset", command=reset_defaults)
-reset_button.pack(side=tk.LEFT, padx=10)
-
-# Add a copy to clipboard button
-copy_button = tk.Button(button_frame, text="Copy to Clipboard", command=copy_to_clipboard)
-copy_button.pack(side=tk.LEFT, padx=10)
-
-# Add dark theme toggle to dark
-theme_button = tk.Button(button_frame, text="Change light/dark", command=theme_change)
-theme_button.pack(side=tk.LEFT, padx=10)
-
-# Add a button to fill dropdowns from the prompt
-fill_dropdowns_button = tk.Button(button_frame, text="Fill from Prompt", command=fill_dropdowns_from_prompt)
-fill_dropdowns_button.pack(side=tk.LEFT, padx=10)
-
-# Add a frame for presets
+# Add a frame for presets and place it above the button frame
 preset_frame = tk.Frame(root, bg="white")
-preset_frame.grid(row=len(categories) // 2 + 3, columnspan=8, pady=10)
+preset_frame.grid(row=4, columnspan=8, pady=10, sticky="ew")  # Added padding and made expandable
 
 # Entry to input preset name
 preset_entry = ttk.Entry(preset_frame, width=30, style="TEntry")
-preset_entry.pack(side=tk.LEFT, padx=5)
+preset_entry.grid(row=0, column=0, padx=5, pady=5, sticky="ew")
 
 # Button to save preset
 save_preset_button = tk.Button(preset_frame, text="Save Preset", command=save_preset)
-save_preset_button.pack(side=tk.LEFT, padx=5)
+save_preset_button.grid(row=0, column=1, padx=5, pady=5)
 
 # Listbox to display saved presets
 presets_listbox = tk.Listbox(preset_frame, width=40, height=5)
-presets_listbox.pack(side=tk.LEFT, padx=5)
+presets_listbox.grid(row=0, column=2, padx=5, pady=5, sticky="ew")
 
 # Button to load selected preset
 load_preset_button = tk.Button(preset_frame, text="Load Preset", command=load_preset)
-load_preset_button.pack(side=tk.LEFT, padx=5)
+load_preset_button.grid(row=0, column=3, padx=5, pady=5)
 
 # Update the presets list on startup
 update_presets_list()
+
+# Add a frame to contain the buttons and keep it at the bottom
+button_frame = tk.Frame(root, bg="white")
+button_frame.grid(row=5, columnspan=8, padx=5, pady=5, sticky="ew")  # Added padding and made expandable
+
+# Add a button to randomize the prompt
+generate_button = tk.Button(button_frame, text="Randomize", command=generate_prompt)
+generate_button.grid(row=0, column=0, padx=10)
+
+# Add a button to fill dropdowns from the prompt
+fill_dropdowns_button = tk.Button(button_frame, text="Fill from Prompt", command=fill_dropdowns_from_prompt)
+fill_dropdowns_button.grid(row=0, column=1, padx=10)
+
+# Add a copy to clipboard button
+copy_button = tk.Button(button_frame, text="Copy to Clipboard", command=copy_to_clipboard)
+copy_button.grid(row=0, column=2, padx=10)
+
+# Add a reset button
+reset_button = tk.Button(button_frame, text="Reset", command=reset_defaults)
+reset_button.grid(row=0, column=3, padx=10)
+
+# Add dark theme toggle to dark
+theme_button = tk.Button(button_frame, text="Change light/dark", command=theme_change)
+theme_button.grid(row=0, column=4, padx=10)
 
 # Start the GUI
 root.mainloop()
