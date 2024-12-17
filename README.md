@@ -1,6 +1,6 @@
 # Random Prompt Generator
 
-This Python script generates random prompts by selecting items from predefined categories. Each category contains a list of items from which one is randomly chosen to create a prompt. The generated prompt is displayed in a graphical user interface (GUI) and can be copied to the clipboard for further use.
+This Python script generates random prompts by selecting items from predefined categories. Each category contains a list of items from which one is randomly chosen to create a prompt. The generated prompt is displayed in a graphical user interface (GUI) and can be copied to the clipboard for further use. Download the latest version here: https://github.com/Typeaux/AIPromptGenFemale/releases/tag/v0.1
 
 ## How to Use
 
